@@ -89,20 +89,31 @@ class ViewController: UIViewController, UNUserNotificationCenterDelegate {
         if let customData = userInfo["customData"] as? String {
             print("Custom Data received: \(customData)")
             
+            
             // Выбор действия пользователя
             switch response.actionIdentifier {
                 // Если пользователь разблокировал устройство
             case UNNotificationDefaultActionIdentifier:
-                print("Default identifier")
+                // Задание 1
+                let ac = UIAlertController(title: "Swipe", message: "User swiped ", preferredStyle: .alert)
+                ac.addAction(UIAlertAction(title: "Ok", style: .cancel))
+                present(ac, animated: true)
                 // Если пользователь выбрал действие show
             case "show":
-                print("Show more information")
+                // Задание 1
+                urWelcome()
             default:
                 break
             }
         }
         // Обязательно вызывается когда все действия сделаны
         completionHandler()
+    }
+    // Задание 1
+    func urWelcome() {
+        let ac = UIAlertController(title: "You are welcome", message: "this shows a UIAlert Controller", preferredStyle: .alert)
+        ac.addAction(UIAlertAction(title: "Okay", style: .cancel))
+        present(ac, animated: true)
     }
     
 }
