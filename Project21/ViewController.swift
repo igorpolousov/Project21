@@ -10,6 +10,9 @@ import UserNotifications
 
 class ViewController: UIViewController, UNUserNotificationCenterDelegate {
 
+    // Задание 2
+    var timeInterval: Double = 5
+    
     override func viewDidLoad() {
         super.viewDidLoad()
     
@@ -37,7 +40,7 @@ class ViewController: UIViewController, UNUserNotificationCenterDelegate {
     // Планирование уведомления
     @objc func scheduleLocal() {
         registerCategories()
-        
+ 
         let center = UNUserNotificationCenter.current()
         // Удалили все ожидающие ранее созданные уведомления
         center.removeAllPendingNotificationRequests()
@@ -61,7 +64,7 @@ class ViewController: UIViewController, UNUserNotificationCenterDelegate {
 //        let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
         
         // Условие которое запустит другое условие через установленный промежуток времени
-        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 5, repeats: false)
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: timeInterval, repeats: false)
         // Запрос на добавление в расписание уведомления с определенным контентом и с определенным временем запуска
         let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
         // Добавили запрос в центр уведомлений
@@ -76,10 +79,14 @@ class ViewController: UIViewController, UNUserNotificationCenterDelegate {
         
         // Показать на переднем плане при выборе show
         let show = UNNotificationAction(identifier: "show", title: "Tell me more ...", options: .foreground)
+        
+        let delay = UNNotificationAction(identifier: "delay", title: "Delay for 24 hours", options: .foreground)
         // Добавили действие show к notification category при появлении уведомления с ID Alarm
-        let category = UNNotificationCategory(identifier: "Alarm", actions: [show], intentIdentifiers: [], options: [])
+        let category = UNNotificationCategory(identifier: "Alarm", actions: [show, delay], intentIdentifiers: [], options: [])
+
         // Добавили категорию в центр уведомлений
         center.setNotificationCategories([category])
+        
     }
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
@@ -95,13 +102,16 @@ class ViewController: UIViewController, UNUserNotificationCenterDelegate {
                 // Если пользователь разблокировал устройство
             case UNNotificationDefaultActionIdentifier:
                 // Задание 1
-                let ac = UIAlertController(title: "Swipe", message: "User swiped ", preferredStyle: .alert)
-                ac.addAction(UIAlertAction(title: "Ok", style: .cancel))
-                present(ac, animated: true)
+              urWelcome(title: "Swipe", massage: "User chose to unlock device")
                 // Если пользователь выбрал действие show
             case "show":
                 // Задание 1
-                urWelcome()
+                urWelcome(title: "View info", massage: "User chose to see more")
+                // Задание 2
+            case "delay":
+                timeInterval = 3600*24
+                scheduleLocal()
+                urWelcome(title: "Delay 24 hours", massage: "User chose to 24 hours delay")
             default:
                 break
             }
@@ -110,8 +120,8 @@ class ViewController: UIViewController, UNUserNotificationCenterDelegate {
         completionHandler()
     }
     // Задание 1
-    func urWelcome() {
-        let ac = UIAlertController(title: "You are welcome", message: "this shows a UIAlert Controller", preferredStyle: .alert)
+    func urWelcome(title: String, massage: String) {
+        let ac = UIAlertController(title: title, message: massage, preferredStyle: .alert)
         ac.addAction(UIAlertAction(title: "Okay", style: .cancel))
         present(ac, animated: true)
     }
