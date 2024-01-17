@@ -1,7 +1,7 @@
 //
 //  ViewController.swift
 //  Project21
-//
+//  Day 72-73
 //  Created by Igor Polousov on 24.11.2021.
 //
 
@@ -26,7 +26,8 @@ class ViewController: UIViewController, UNUserNotificationCenterDelegate {
     @objc func registerLocal() {
         let center = UNUserNotificationCenter.current()
         // Типы уведомлений которые будут отправляться пользователю указаны в массиве
-        center.requestAuthorization(options: [.alert, .badge, .sound]) {
+        // Пользователь может отказать в авторизации локальных уведомлений потому что он не знает что ему будет отправляться. Для этого делается так же запрос на .provisional notifications. Это даёт возможность послать пробное уведомление пользователю, если он разрешит его оставить, то будет авторизация на остальные уведомления
+        center.requestAuthorization(options: [.alert, .badge, .sound, .provisional]) {
             granted, error in
             
             if granted {
@@ -58,8 +59,8 @@ class ViewController: UIViewController, UNUserNotificationCenterDelegate {
         
         // Установка времени и даты
         var dateComponents = DateComponents()
-        dateComponents.hour = 10
-        dateComponents.minute = 30
+        dateComponents.hour = 16
+        dateComponents.minute = 59
         
 //        let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
         
